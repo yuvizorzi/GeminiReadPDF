@@ -1,6 +1,6 @@
 import streamlit as st
 from PyPDF2 import PdfReader
-from langchain.text_splitter import RecursiveTextSplitter
+# from langchain.text_splitter import RecursiveTextSplitter
 import os
 
 from langchain_google_genai import GoogleGenerativeAIEmbeddings
@@ -24,10 +24,21 @@ def get_pdf_text(pdf_docs):
                 text += extracted_text
     return text
 
-def get_text_chunks(text):
-    text_splitter = RecursiveTextSplitter(chunk_size=10000, chunk_overlap=1000)
-    chunks = text_splitter.split_text(text)
+def custom_text_splitter(text, chunk_size = 10000, overlap = 10000):
+    chunks = []
+    start = 0
+    while start < len(text):
+        end = start + chunk_size
+        if end + overlap < len(text):
+            end += overlap
+        chunks.append(text[start:end])
+        start += chunk_size - overlap # Adjust start for overlap
     return chunks
+
+#def get_text_chunks(text):
+    #text_splitter = RecursiveTextSplitter(chunk_size=10000, chunk_overlap=1000)
+    #chunks = text_splitter.split_text(text)
+   # return chunks
 
 def get_vector_store(text_chunks):
     embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001")
