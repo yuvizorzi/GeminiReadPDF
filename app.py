@@ -24,7 +24,7 @@ def get_pdf_text(pdf_docs):
                 text += extracted_text
     return text
 
-def custom_text_splitter(text, chunk_size = 10000, overlap = 10000):
+def custom_text_splitter(text, chunk_size = 4000, overlap = 1000):
     chunks = []
     start = 0
     while start < len(text):
