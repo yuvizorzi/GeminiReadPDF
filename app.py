@@ -133,3 +133,19 @@ try:
 except Exception as e:
     logging.error("An error occurred: ", exc_info=True)
     st.error(f"An error occurred: {e}")
+
+import pickle
+
+def safe_load_pickle(filename, allow_dangerous_deserialization=False):
+    if not allow_dangerous_deserialization:
+        raise ValueError("Dangerous deserialization is not allowed. Make sure you trust the source before enabling it.")
+
+    with open(filename, 'rb') as file:
+        return pickle.load(file)
+
+# Usage
+try:
+    # Only set to True if you are sure about the safety of the pickle file.
+    my_data = safe_load_pickle("path_to_your_file.pkl", allow_dangerous_deserialization=True)
+except Exception as e:
+    print(f"Failed to load pickle file: {e}")
