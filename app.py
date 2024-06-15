@@ -79,7 +79,7 @@ def main():
         if st.button("Submit & Process"):
             with st.spinner("Processing..."):
                 raw_text = get_pdf_text(pdf_docs)
-                text_chunks = get_text_chunks(raw_text)
+                text_chunks = custom_text_splitter(raw_text)
                 get_vector_store(text_chunks)
                 st.success("Done")
 
