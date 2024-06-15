@@ -66,22 +66,56 @@ def user_input(user_question):
     response = chain({"input_documents": docs, "question": user_question}, return_only_outputs=True)
     st.write("Reply: ", response)
 
+
+
+
 def main():
     st.set_page_config(page_title="Chat with Multiple PDF", layout="wide")
     st.header("Chat with Multiple PDF using Gemini💁")
+
+    # Input for user questions
     user_question = st.text_input("Ask a Question from the PDF Files")
+
+    # Handle user questions if available
     if user_question:
         user_input(user_question)
 
     with st.sidebar:
         st.title("Menu")
+        # Uploading PDF files
         pdf_docs = st.file_uploader("Upload your PDF Files and Click on the Submit & Process Button", accept_multiple_files=True)
         if st.button("Submit & Process"):
-            with st.spinner("Processing..."):
-                raw_text = get_pdf_text(pdf_docs)
-                text_chunks = custom_text_splitter(raw_text)
-                get_vector_store(text_chunks)
-                st.success("Done")
+            if pdf_docs is None or len(pdf_docs) == 0:
+                st.warning("Please upload at least one PDF file to proceed.")
+            else:
+                with st.spinner("Processing..."):
+                    # Extract text from PDF
+                    raw_text = get_pdf_text(pdf_docs)
+                    if raw_text:  # Ensure there is text extracted
+                        # Split and store the text for processing
+                        text_chunks = custom_text_splitter(raw_text)
+                        get_vector_store(text_chunks)
+                        st.success("Processing complete!")
+                    else:
+                        st.error("No text could be extracted from the uploaded PDF files. Please check your files.")
+
+#def main():
+   # st.set_page_config(page_title="Chat with Multiple PDF", layout="wide")
+    #st.header("Chat with Multiple PDF using Gemini💁")
+    #user_question = st.text_input("Ask a Question from the PDF Files")
+    
+   # if user_question:
+       # user_input(user_question)
+
+    #with st.sidebar:
+       # st.title("Menu")
+        #pdf_docs = st.file_uploader("Upload your PDF Files and Click on the Submit & Process Button", accept_multiple_files=True)
+       # if st.button("Submit & Process"):
+            #with st.spinner("Processing..."):
+               # raw_text = get_pdf_text(pdf_docs)
+               # text_chunks = custom_text_splitter(raw_text)
+               # get_vector_store(text_chunks)
+               # st.success("Done")
 
                 
 import streamlit as st
